@@ -52,7 +52,9 @@ Puppet::Type.type(:php_version).provide(:php_source) do
 
     # Including php-fpm if the version is >= 5.3.3
     # This will fix previously broken installs
-    does_exist &&= File.exists? "#{@resource[:phpenv_root]}/versions/#{@resource[:version]}/sbin/php-fpm" unless @resource[:version].match(/\A5\.3\.[12]\z/)
+    unless @resource[:disable_fpm]
+      does_exist &&= File.exists? "#{@resource[:phpenv_root]}/versions/#{@resource[:version]}/sbin/php-fpm" unless @resource[:version].match(/\A5\.3\.[12]\z/)
+    end
 
     # Double check we can run PHP if it exists
     # Should identify broken versions eg. due to zlib changing...
@@ -251,7 +253,16 @@ Puppet::Type.type(:php_version).provide(:php_source) do
     ]
 
     # PHP-FPM isn't available until 5.3.3
-    args << "--enable-fpm" unless @resource[:version].match(/\A5\.3\.[12]\z/)
+    unless @resource[:disable_fpm]
+      args << "--enable-fpm" unless @resource[:version].match(/\A5\.3\.[12]\z/)
+    end
+
+    if @resource[:configure_params].kind_of?(Array)
+      configure_params = @resource[:configure_params]
+    else
+      configure_params = [@resource[:configure_params]]
+    end
+    args = args | configure_params
 
     args
   end
