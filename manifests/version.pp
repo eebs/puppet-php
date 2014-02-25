@@ -98,12 +98,14 @@ define php::version(
     # Install PHP!
 
     php_version { $version:
-      user          => $::boxen_user,
-      user_home     => "/Users/${::boxen_user}",
-      phpenv_root   => $php::config::root,
-      version       => $version,
-      homebrew_path => $boxen::config::homebrewdir,
-      require       => [
+      user             => $::boxen_user,
+      user_home        => "/Users/${::boxen_user}",
+      phpenv_root      => $php::config::root,
+      version          => $version,
+      homebrew_path    => $boxen::config::homebrewdir,
+      disable_fpm      => $php::config::disable_fpm,
+      configure_params => $php::config::configure_params,
+      require          => [
         Repository["${php::config::root}/php-src"],
         Package['gettext'],
         Package['boxen/brews/freetype'],
@@ -116,7 +118,7 @@ define php::version(
         Package['autoconf'],
         Package['boxen/brews/autoconf213'],
       ],
-      notify        => Exec["phpenv-rehash-post-install-${version}"],
+      notify           => Exec["phpenv-rehash-post-install-${version}"],
     }
 
     # Fix permissions for php versions installed prior to 0.3.5 of this module

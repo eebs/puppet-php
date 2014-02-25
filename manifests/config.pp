@@ -4,7 +4,10 @@
 #
 #     include php::config
 #
-class php::config {
+class php::config (
+  $disable_fpm      = false,
+  $configure_params = []
+){
   require boxen::config
 
   $root              = "${boxen::config::home}/phpenv"

@@ -34,4 +34,10 @@ Puppet::Type.newtype(:php_version) do
 
   newparam(:user_home) do
   end
+
+  newparam(:disable_fpm) do
+  end
+
+  newparam(:configure_params) do
+  end
 end
