@@ -7,6 +7,7 @@ describe "php" do
   it do
     should include_class("php::config")
     should include_class("homebrew")
+    should include_class("stdlib")
     should include_class("wget")
     should include_class("autoconf")
     should include_class("libtool")
@@ -63,7 +64,7 @@ describe "php" do
       "libevent",
       "mcrypt"
     ].each do |pkg|
-      should contain_package(pkg).with_provider("homebrew")
+      should contain_package(pkg)
     end
 
     should contain_homebrew__formula("autoconf213").with({
@@ -88,6 +89,15 @@ describe "php" do
 
     should contain_package("boxen/brews/zlibphp").with({
       :ensure => "1.2.8-boxen1"
+    })
+
+    should contain_homebrew__formula("bisonphp26").with({
+      :source => "puppet:///modules/php/brews/bison26.rb",
+      :before => "Package[boxen/brews/bisonphp26]"
+    })
+
+    should contain_package("boxen/brews/bisonphp26").with({
+      :ensure => "2.6.5-boxen1"
     })
 
     should contain_exec("phpenv-setup-root-repo").with({
