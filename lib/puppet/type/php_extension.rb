@@ -55,4 +55,8 @@ Puppet::Type.newtype(:php_extension) do
     defaultto :pecl
   end
 
+  newparam(:provider) do
+    defaultto :pecl
+  end
+
 end
